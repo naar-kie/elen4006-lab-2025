@@ -66,9 +66,8 @@ Keywords = {numbat24.04}
 \centering
 \includegraphics[scale=0.5]{witseie100logo.png}  
 \end{figure}
-\title{Hand Movement Distance Measurement System: \underline{Group 72}}
-
-\author{Kgadile E. Masemola (\underline{876729}), Jashna G. Gurahoo (\underline{2309262})\\ ELEN4006A - Measurement Systems}
+\title{Hand Movement Distance Measurement System}
+\author{Kgadile E. Masemola (\underline{876729})\\ ELEN4006A - Measurement Systems}
 \date{April 22, 2025}
 \maketitle
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -94,7 +93,7 @@ In section 2, design specifications and a high level solution are presented. Sec
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \section{Design Specification and High-level Solution}
-Design specifications are shown in Table 1. Input range is for an average human hand which measures 18cm from wrist to middle finger (find source). The arc length for a typical wrist of 70\textdegree{} is 212mm. Bandwidth is designed according to a human hand motion which is typically $<$ 2 Hz, we want to measure up to the 15th harmonic for extreme unusual movements (find source). Accuracy of $1\%$ of full scale output change sufficient to detect small improvements in range. calculated from datasheet of sensor datasheet and operational temperature which covers the ambient value at typical rehabilitation clinics (source). The output voltage range(0 - 5V) from sensor aliagns with Arduino input range.
+(EXPLAIN WHY WE CHOSE THIS EXCERCISE, WHY WE CHOOSE THE TYPE OF DISPLAY)Design specifications are shown in Table 1. Input range is for an average human hand which measures 18cm from wrist to middle finger (find source). The arc length for a typical wrist of 70\textdegree{} is 212mm. Bandwidth is designed according to a human hand motion which is typically $<$ 2 Hz, we want to measure up to the 15th harmonic for extreme unusual movements (find source). Accuracy of $1\%$ of full scale output change sufficient to detect small improvements in range. calculated from datasheet of sensor datasheet and operational temperature which covers the ambient value at typical rehabilitation clinics (source). The output voltage range(0 - 5V) from sensor aliagns with Arduino input range.
 
 \begin{table}[ht]
 \centering
@@ -112,7 +111,7 @@ Figure \ref{fig:measure_diag} shows a diagram of how the measurement system will
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=0.3\textwidth]{diagram-Measure.png}
-    \caption{Diagram of the finger distance measurement system}
+    \caption{Diagram of the hand distance measurement system}
     \label{fig:measure_diag}
 \end{figure}
 A high-level block diagram based on the Bentley model is shown in the next section (Figure \ref{fig:cct_system}) . As the finger moves, the sensor output shifts from 2.5 to 5V. An analog signal conditioning stage removes the 2.5 V bias and amplifies the signal (typically 2.5 - 5V) to maximise the ADC resolution . The microcontroller processes this data and outputs the distance in mm for display on a LCD screen.
@@ -131,7 +130,7 @@ A high-level block diagram based on the Bentley model is shown in the next secti
 
 
 \subsection{Sensing element}
-The sensing element comprises a Honeywell SS495A hall-effect sensor \cite{ti_datasheet} and neodymium magnet. These components are prescribed for this laboratory. The sensor has a an in-built amplifying element that is at readable voltage values.
+The sensing element comprises a Honeywell SS495A hall-effect sensor \cite{ti_datasheet} and neodymium magnet. These components are prescribed for this laboratory. The sensor has a an in-built amplifying element that is at readable voltage values \cite{ti_datasheet}.
 
 \subsection{Signal conditioning}
 The sensor’s output can source or sink up to 1.5 mA  \cite{ti_datasheet}, and the input bias of the op amp is in the microamp range, so the sensor is not appreciably loaded by the amplifier. This was confirmed by observing no change in sensor output whether the op amp was connected or not. The op amp’s output drives the Arduino ADC input, which presents a small capacitance and a resistance of $\sim 100 \text{M} \Omega$.
@@ -147,7 +146,26 @@ A simple calibration procedure is done initially: with the hand open, the output
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \section{Performance Evaluation}
-To evaluate the system, we conducted a series of bench-top tests with the assembled prototype. Hall sensor was placed on a strap, magnet moved by a slider to simulate finger motion (COMPLETE SECTION BASED ON TESTS):
+To evaluate the system, we conducted a series of bench-top tests with the assembled prototype. Hall sensor was placed on a breadboard, magnet moved by a slider to simulate finger motion. The testing results of the integrated system is shown in Figure \ref{fig:testres}. 
+\begin{figure}[h]
+\centering
+\begin{subfigure}{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{distvsvoltX2.png}
+  \caption{Output Voltage vs Distance}
+  \label{fig:voltdist}
+\end{subfigure}\hfill
+\begin{subfigure}{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{distvsvolt.png}
+  \caption{Input-Output distance comparison}
+  \label{fig:distdit}
+\end{subfigure}
+\caption{Hand movement distance measurement system test results}
+\label{fig:testres}
+\end{figure}
+Figure \ref{fig:voltdist} is showing the relationship between distance versus output voltage at the sensor and arduino ADC output. The corresponding error is relatively small, mostly $< 0.1$V, suggesting the Arduino's ADC is fairly accurate. This is due to ADC quantization error and possible reference voltage mismatch or board-level noise (SOURCE). Graph in Figure \ref{fig:distdit} compares the system performance between real results and system results. (WHAT IS THE ERROR, IS IT ACCEPTABLE?? SOURCE??) 
+
 \begin{itemize}
     \item \textbf{Sensor Sensitivity}: Estimated at 2.45 mV/Gauss (within 2\% of specification).
     \item \textbf{Bandwidth}: The SS495A sensor itself has a very fast response ($3 \mu$s rise time). the op amp (LM358) has a gain-bandwidth of $\sim 1$ MHz. The microcontroller sampling at $\sim 20$ Hz means the overall system bandwidth is limited by sampling to about 10 Hz (Nyquist), which is intentional. This is more than sufficient for capturing voluntary finger movements (which typically have frequency content $< 5$ Hz). Approximately 150 Hz post-filtering. (VERIFY WITH MEASUREMENTS!)
